@@ -4517,6 +4517,7 @@ winetricks_set_wineprefix()
         W_COMMONFILES_WIN="$(w_expand_env CommonProgramW6432)"
         W_COMMONFILES="$(w_pathconv -u "${W_COMMONFILES_WIN}")"
 
+
         # check if user has exported env variable or not
         # if set, use value directly later when determining if win64 warnings should be displayed or not
         # if empty, then fallback to checking for location-specific files and set accordingly
@@ -4533,7 +4534,9 @@ winetricks_set_wineprefix()
                 echo "${W_TMP_EARLY}/no_win64_warnings exists, not issuing 64-bit prefix warning"
                 W_NO_WIN64_WARNINGS=1
             else
-                W_NO_WIN64_WARNINGS=0
+                # Protontricks patch: Don't display a warning popup for the 64-bit
+                # prefix
+                W_NO_WIN64_WARNINGS=1
             fi
         fi
 
