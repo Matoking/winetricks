@@ -5079,6 +5079,10 @@ winetricks_set_wineprefix()
             *) touch "${W_TMP_EARLY}/no_win64_warnings" ;;
         esac
 
+        # Protontricks patch: Don't display a warning popup for the 64-bit
+        # prefix
+        _W_no_win64_warnings=1
+
         if [ "${_W_no_win64_warnings}" = 0 ]; then
             case ${LANG} in
                 bg*) w_warn "Използвате 64-битова папка. Повечето програми са за 32-битова архитектура. Ако възникнат проблеми, моля, използвайте 32-битова папка, преди да ги докладвате." ;;
