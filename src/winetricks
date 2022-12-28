@@ -4964,6 +4964,10 @@ winetricks_set_wineprefix()
             *) touch "${W_TMP_EARLY}/no_win64_warnings" ;;
         esac
 
+        # Protontricks patch: Don't display a warning popup for the 64-bit
+        # prefix
+        _W_no_win64_warnings=1
+
         if [ "${_W_no_win64_warnings}" = 0 ]; then
             case ${LANG} in
                 ru*) w_warn "Вы используете 64-битный WINEPREFIX. Важно: многие ветки устанавливают только 32-битные версии пакетов. Если у вас возникли проблемы, пожалуйста, проверьте еще раз на чистом 32-битном WINEPREFIX до отправки отчета об ошибке." ;;
