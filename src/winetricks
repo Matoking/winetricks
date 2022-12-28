@@ -3140,7 +3140,7 @@ winetricks_print_version()
     winetricks_get_sha256sum_prog
 
     w_get_sha256sum "$0"
-    echo "${WINETRICKS_VERSION} - sha256sum: ${_W_gotsha256sum}"
+    echo "${WINETRICKS_VERSION} (protontricks) - sha256sum: ${_W_gotsha256sum}"
 }
 
 # Run a small wine command for internal use
