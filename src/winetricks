@@ -3541,7 +3541,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='Run a Wine cmd shell'
             _W_msg_shell='Run a commandline shell (for debugging)'
             _W_msg_folder='Browse files'
-            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS WINEPREFIX"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         de*) _W_msg_title="Pakettyp auswählen - Aktueller Präfix ist \"${WINEPREFIX}\""
             _W_msg_body='Was möchten Sie tun?'
@@ -3556,7 +3556,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='Starten Sie Wine cmd'
             _W_msg_shell='Eine Kommandozeile zum debuggen starten'
             _W_msg_folder='Ordner durchsuchen'
-            _W_msg_annihilate="ALLE DATEIEN UND PROGRAMME IN DIESEM WINEPREFIX Löschen"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         pl*) _W_msg_title="Winetricks - obecny prefiks to \"${WINEPREFIX}\""
             _W_msg_body='Co chcesz zrobić w tym prefiksie?'
@@ -3571,7 +3571,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='Uruchomić Wine cmd'
             _W_msg_shell='Uruchomić powłokę wiersza poleceń (dla debugowania)'
             _W_msg_folder='Przeglądać pliki'
-            _W_msg_annihilate="Usuńąć WSZYSTKIE DANE I APLIKACJE WEWNĄTRZ TEGO PREFIKSU WINE"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         pt*) _W_msg_title="Winetricks - o prefixo atual é \"${WINEPREFIX}\""
             _W_msg_body='O que você gostaria de fazer com este prefixo wineprefix?'
@@ -3586,7 +3586,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='Executar Wine cmd'
             _W_msg_shell='Executar linha de comandos shell (para depuração)'
             _W_msg_folder='Gerenciar arquivos'
-            _W_msg_annihilate="Apagar TODOS OS DADOS E APLICATIVOS DENTRO DESTE WINEPREFIX"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         ru*) _W_msg_title="Winetricks — текущий префикс: \"${WINEPREFIX}\""
             _W_msg_body='Что вы хотите сделать с этим префиксом?'
@@ -3601,7 +3601,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='Запустить wine cmd (командную строку)'
             _W_msg_shell='Запустить графический терминал (для отладки)'
             _W_msg_folder='Запустить winefile (проводник файлов)'
-            _W_msg_annihilate="Удалить ВСЕ ДАННЫЕ И ПРИЛОЖЕНИЯ в этом префиксе"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         uk*) _W_msg_title="Winetricks - поточний prefix \"${WINEPREFIX}\""
             _W_msg_body='Що Ви хочете зробити для цього wineprefix?'
@@ -3616,7 +3616,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='Запустіть оболонку Wine cmd'
             _W_msg_shell='Запуск командної оболонки (для налагодження)'
             _W_msg_folder='Перегляд файлів'
-            _W_msg_annihilate="Видалити УСІ ДАНІ ТА ПРОГРАМИ З ЦЬОГО WINEPREFIX"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         zh_CN*)   _W_msg_title="Winetricks - 当前容器路径是 \"${WINEPREFIX}\""
             _W_msg_body='管理当前容器'
@@ -3631,7 +3631,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='运行 Wine cmd'
             _W_msg_shell='运行命令提示窗口 (作为调试)'
             _W_msg_folder='浏览容器中的文件'
-            _W_msg_annihilate="删除容器中所有数据和应用程序"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         zh_TW*|zh_HK*)   _W_msg_title="Winetricks - 目前容器路徑是 \"${WINEPREFIX}\""
             _W_msg_body='管理目前容器'
@@ -3646,7 +3646,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='運行 Wine cmd'
             _W_msg_shell='執行命令提示視窗 (作為偵錯)'
             _W_msg_folder='瀏覽容器中的檔案'
-            _W_msg_annihilate="刪除容器中所有資料和應用程式"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
         *)  _W_msg_title="Winetricks - current prefix is \"${WINEPREFIX}\""
             _W_msg_body='What would you like to do to this wineprefix?'
@@ -3661,7 +3661,7 @@ winetricks_mainmenu()
             _W_msg_winecmd='Run a Wine cmd shell'
             _W_msg_shell='Run a commandline shell (for debugging)'
             _W_msg_folder='Browse files'
-            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS WINEPREFIX"
+            _W_msg_annihilate="Delete ALL DATA AND APPLICATIONS INSIDE THIS PROTON PREFIX"
             ;;
     esac
 
@@ -5196,7 +5196,17 @@ winetricks_annihilate_wineprefix()
         *) w_askpermission "Delete ${WINEPREFIX}, its apps, icons, and menu items?" ;;
     esac
 
+    # Proton specific change: also delete the compatdata directory
+    _W_proton_dir=$(readlink -f "${WINEPREFIX}/..")
+
     rm -rf "${WINEPREFIX}"
+
+    # Ensure the Proton compatdata directory looks as expected before nuking it.
+    # Otherwise we may risk deleting unrelated user files if the user is
+    # somehow running this command against a non-Proton Wine prefix.
+    if test -f "${_W_proton_dir}/pfx.lock" && test "${PROTON_PATH}"; then
+        rm -rf "${_W_proton_dir}"
+    fi
 
     # Also remove menu items.
     find "${XDG_DATA_HOME}/applications" -type f -name '*.desktop' -exec grep -q -l "${WINEPREFIX}" '{}' ';' -exec rm '{}' ';'
