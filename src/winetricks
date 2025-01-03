@@ -4433,7 +4433,9 @@ winetricks_set_wineprefix()
             fi
         fi
         if [ -z "${_W_wineserver_binary_arch}" ]; then
-            w_warn "Unknown file arch of ${WINESERVER_BIN}."
+            # Protontricks-specific change: do not show dialog for this warning;
+            # it will otherwise be displayed every time.
+            WINETRICKS_GUI=none w_warn "Unknown file arch of ${WINESERVER_BIN}."
         fi
 
         WINE_BIN="$(command -v "${WINE}")"
@@ -4448,7 +4450,9 @@ winetricks_set_wineprefix()
             fi
         fi
         if [ -z "${_W_wine_binary_arch}" ]; then
-            w_warn "Unknown file arch of ${WINE_BIN}."
+            # Protontricks-specific change: do not show dialog for this warning;
+            # it will otherwise be displayed every time.
+            WINETRICKS_GUI=none w_warn "Unknown file arch of ${WINE_BIN}."
         fi
 
         # determine wow64 type (new/old)
